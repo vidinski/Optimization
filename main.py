@@ -1,4 +1,4 @@
-# from Dynamics import longitudinalAircraft as ode
+from Dynamics import longitudinalAircraft as ode
 import numpy as np
 import scipy.integrate as integrate
 
@@ -35,20 +35,12 @@ input_Sim = [[0, 1], [0, 0.5]]; # After 1 second step command to 0.5
 			# HOW TO SOLVE PROBLEM WITH NUMPY MINIMIZE
 ###########################################################################################
 
-#from scipy.integrate import odeint
-from scipy.optimize import minimize
-
-# Define the ODE model
-def model(y, t, params):
-    k1, k2 = params
-    dydt = [-k1 * y[0] + k2 * y[1], k1 * y[0] - k2 * y[1]]
-    return dydt
-
 # Define the objective function to minimize
 def objective(params):
     y0 = [1, 0]  # Initial conditions
     t = np.linspace(0, 10, 100)
-    y_sim = integrate.odeint(model, y0, t, args=(params,))
+    global y_sim #= integrate.odeint(model, y0, t, args=(params,))
+    y_sim = integrate.odeint(ode.solveSys, y0, t, args=(params,))
     y_exp = [np.exp(-t), 1 - np.exp(-t)]  # Simulated experimental data
     return np.sum((y_sim - np.transpose(y_exp))**2)
 
@@ -56,7 +48,9 @@ def objective(params):
 params0 = [0.5, 0.5]
 
 # Minimize the objective function
-result = minimize(objective, params0)
+if runMinimization == True : 
+    result = minimize(objective, params0)
 
 # Print the optimized parameters
 print(result.x)
+print(y_sim)
