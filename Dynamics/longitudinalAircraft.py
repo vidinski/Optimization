@@ -1,10 +1,11 @@
 import numpy as np
 
 def solveSys(y, t, controlVar):
-    k1, k2 = controlVar
-    M = 0.0; 
-    lift = 1.0 
-    drag = 2.0
+    #print(controlVarArray)
+    controlVarArray = np.asarray(controlVar)
+    M = np.interp(t, controlVarArray[0,:], controlVarArray[1,:])
+    lift = -1.0 
+    drag = -2.0
     mass = 10.0
     g = 9.81
     inertiayy = 10.0
@@ -18,9 +19,9 @@ def solveSys(y, t, controlVar):
     theta = y[5]
 
     # axial velocity
-    ud = lift/mass - g*np.sin(theta) - q*w
+    ud = drag/mass - g*np.sin(theta) - q*w
     # vertical velocity
-    wd = drag/mass - g*np.cos(theta) +  q*u
+    wd = lift/mass - g*np.cos(theta) +  q*u
 
     # Range 
     rd = u*np.cos(theta) + w*np.sin(theta)
