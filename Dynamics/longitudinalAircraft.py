@@ -7,20 +7,20 @@ def solveSys(y, t, controlVar):
     drag = 2.0
     mass = 10.0
     g = 9.81
-    inertiay = 10.0
+    inertiayy = 10.0
 
     # states = u, w, x, z, q, theta
-    u = y[0] 
-    w = y[1]
-    x = 0 #y[2]
-    z = 0 #y[3]
-    q = 0 #y[4]
-    theta = 0  #y[5]
+    u =     y[0]
+    w =     y[1]
+    x =     y[2]
+    z =     y[3]
+    q =     y[4]
+    theta = y[5]
 
     # axial velocity
-    u = lift/mass - g*np.sin(theta) - q*w
+    ud = lift/mass - g*np.sin(theta) - q*w
     # vertical velocity
-    w = drag/mass - g*np.cos(theta) +  q*u
+    wd = drag/mass - g*np.cos(theta) +  q*u
 
     # Range 
     rd = u*np.cos(theta) + w*np.sin(theta)
@@ -29,7 +29,10 @@ def solveSys(y, t, controlVar):
     zd = -u*np.sin(theta) + w*np.cos(theta)
 
     # pitch rate
-    qd = M/inertiay
+    qd = M/inertiayy
 
-    dydt = [-k1 * y[0] + k2 * y[1], k1 * y[0] - k2 * y[1]]
+    #dydt = [-k1 * y[0] + k2 * y[1], k1 * y[0] - k2 * y[1]]
+    
+    dydt =  [ ud, wd, rd, zd, qd, q]
+
     return dydt
