@@ -1,11 +1,15 @@
 import numpy as np
 
+global discreteTime
+
 def solveSys(y, t, controlVar):
     #print(controlVarArray)
     controlVarArray = np.asarray(controlVar)
-    M = np.interp(t, controlVarArray[0,:], controlVarArray[1,:])
-    lift = -1.0 
-    drag = -2.0
+    # M = np.interp(t, controlVarArray[0,:], controlVarArray[1,:])
+    M = np.interp(t, discreteTime, controlVarArray)
+    
+    lift = 75.0 
+    drag = -100.0
     mass = 10.0
     g = 9.81
     inertiayy = 10.0
@@ -27,7 +31,7 @@ def solveSys(y, t, controlVar):
     rd = u*np.cos(theta) + w*np.sin(theta)
 
     # Altitude
-    zd = -u*np.sin(theta) + w*np.cos(theta)
+    zd = -(-u*np.sin(theta) + w*np.cos(theta))
 
     # pitch rate
     qd = M/inertiayy

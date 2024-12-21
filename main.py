@@ -5,9 +5,8 @@ import matplotlib.pyplot as plt
 from scipy.optimize import minimize
 
 dt = 0.1
-tf = 0.75
-tspan = [0., tf]
-tmr = np.arange(0.0, tspan[1], dt)
+tf = 8
+tmr = np.arange(0.0, tf, dt)
 
 runMinimization = True
 
@@ -20,11 +19,17 @@ x_sim0 = np.zeros((1,number_of_states))
 x_sim0 = x_sim0[0]
 
 # starting axial velocity
-x_sim0[0] = 10
+x_sim0[0] = 25
+# starting altitude
 x_sim0[3] = -100
-print(x_sim0)
+print('---------------Initial Condtions are:', x_sim0, '--------------------')
 
-input_Sim = [[0, 1], [0, 0.5]]; # After 1 second step command to 0.5 
+dtDiscrete = 0.5
+ode.discreteTime = np.arange(0.0, tf, dtDiscrete)
+input_Sim = np.zeros((1,np.size(ode.discreteTime)))
+input_Sim = input_Sim[0,:]
+
+print('--------------- Discrete Time Points:', ode.discreteTime, '--------------------')
 
 ###########################################################################################
 			# PLOTTER
@@ -60,12 +65,8 @@ def maxRange(params):
     x0 = x_sim0
     tmr_ = tmr
     global x_sim 
-    print(x0)
-    x_sim = integrate.odeint(ode.solveSys, x_sim0, tmr, args=(input_Sim,))
+    x_sim = integrate.odeint(ode.solveSys, x0, tmr_, args=(params,))
     return -x_sim[2,-1]
-
-# Initial guess for parameters
-params0 = [0.5, 0.5]
 
 # Minimize the objective function
 if runMinimization == True : 
@@ -73,12 +74,13 @@ if runMinimization == True :
 
     # Print the optimized parameters
     print(result.x)
-    print(x_sim)
+    # print(x_sim)
+    fig = generate_plots(tmr, x_sim)
+    plt.show()
 else: 
     x_sim = integrate.odeint(ode.solveSys, x_sim0, tmr, args=(input_Sim,))
     print(x_sim)
     fig = generate_plots(tmr, x_sim)
-
     plt.show()
 
 
