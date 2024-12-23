@@ -22,6 +22,12 @@ def solveSys(y, t, controlVar):
     q =     y[4]
     theta = y[5]
 
+    # Angle of attack
+    alpha = np.arctan2(w,u)
+
+    # Dynamic Pressure
+    DynPres = 0.5*2.3*(np.power(u,2) + np.power(w,2))
+
     # axial velocity
     ud = drag/mass - g*np.sin(theta) - q*w
     # vertical velocity
