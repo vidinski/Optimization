@@ -8,11 +8,17 @@ def solveSys(y, t, controlVar):
     # M = np.interp(t, controlVarArray[0,:], controlVarArray[1,:])
     M = np.interp(t, discreteTime, controlVarArray)
     
-    lift = 75.0 
-    drag = -100.0
-    mass = 10.0
+    # lift = 75.0 
+    # drag = -100.0
+    # mass = 10.0
+    # g = 9.81
+    # inertiayy = 10.0
+
+    mass = 1500.0
     g = 9.81
-    inertiayy = 10.0
+    inertiayy = 2.0*mass/2.0*100.0
+    airdensity = 1.23
+    PI = np.pi; 
 
     # states = u, w, x, z, q, theta
     u =     y[0]
@@ -23,10 +29,10 @@ def solveSys(y, t, controlVar):
     theta = y[5]
 
     # Angle of attack
-    alpha = np.arctan2(w,u)
+    alpha = theta - np.arctan2(w,u)
 
     # Dynamic Pressure
-    DynPres = 0.5*2.3*(np.power(u,2) + np.power(w,2))
+    DynPres = 0.5*1.3*(np.power(u,2) + np.power(w,2))
 
     # axial velocity
     ud = drag/mass - g*np.sin(theta) - q*w
