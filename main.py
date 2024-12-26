@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from scipy.optimize import minimize
 
 dt = 0.1
-tf = 4
+tf = 20
 tmr = np.arange(0.0, tf, dt)
 dtDiscrete = 0.5
 
@@ -20,14 +20,18 @@ x_sim0 = np.zeros((1,number_of_states))
 x_sim0 = x_sim0[0]
 
 # starting axial velocity
-x_sim0[0] = 25
+x_sim0[0] = 200
 # starting altitude
-x_sim0[3] = -100
+x_sim0[3] = -1000
 print('---------------Initial Condtions are:', x_sim0, '--------------------')
 
 ode.discreteTime = np.arange(0.0, tf, dtDiscrete)
 input_Sim = np.zeros((1,np.size(ode.discreteTime)))
 input_Sim = input_Sim[0,:]
+input_Sim[0] = 200000
+input_Sim[1] = 200000
+input_Sim[2] = 200000
+input_Sim[3] = 200000
 
 print('--------------- Discrete Time Points:', ode.discreteTime, '--------------------')
 
@@ -52,8 +56,21 @@ def generate_plots(t, x_sim_out, command):
     ax = fig.add_subplot(332)
     ax.grid('on')
     plt.xlabel('Time (s)')
+    plt.ylabel('Speed')
+    ax.plot(tmr, x_sim_out[:,0])
+
+    ax = fig.add_subplot(332)
+    ax.grid('on')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Speed')
+    ax.plot(tmr, x_sim_out[:,5])
+
+    ax = fig.add_subplot(333)
+    ax.grid('on')
+    plt.xlabel('Time (s)')
     plt.ylabel('Command')
     ax.plot(ode.discreteTime, command)
+
 
 
 ###########################################################################################

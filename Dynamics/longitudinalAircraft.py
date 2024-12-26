@@ -19,6 +19,10 @@ def solveSys(y, t, controlVar):
     inertiayy = 2.0*mass/2.0*100.0
     airdensity = 1.23
     PI = np.pi; 
+    S = 50; 
+    alphaBreakPoints = [-PI/2.0, -PI/4.0, 0.0,  PI/4.0, PI/2.0]; 
+    Cl = [ 0.025, 0.05, -0.01, -0.05, -0.025 ]
+    Cd = [ -0.005,  -0.0025, -0.001, -0.0025,  -0.005 ]
 
     # states = u, w, x, z, q, theta
     u =     y[0]
@@ -29,10 +33,19 @@ def solveSys(y, t, controlVar):
     theta = y[5]
 
     # Angle of attack
-    alpha = theta - np.arctan2(w,u)
+    alpha = np.arctan2(w,u)
+
+    #airspeed: 
+    airspeed = np.sqrt(u**2+w**2)
 
     # Dynamic Pressure
-    DynPres = 0.5*1.3*(np.power(u,2) + np.power(w,2))
+    DynPres = 0.5*airdensity*airspeed**2
+
+    # Look up CD and CL 
+    lookedUpCl = np.interp(alpha, alphaBreakPoints, Cl)
+    lookedUpCd = np.interp(alpha, alphaBreakPoints, Cd)
+    drag = lookedUpCd*S*DynPres
+    lift = lookedUpCl*S*DynPres
 
     # axial velocity
     ud = drag/mass - g*np.sin(theta) - q*w
